@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Which Borough am I in?</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+</head>
+
+<body>
+    <div class="grid">
+
+        <header>
+            <h1>Which Borough am I in?</h1>
+            <p>
+                <button id="location-button" onclick="watchLocation()">Use device location</button>
+            </p>
+        </header>
+        <main id="map"></main>
+        <footer>
+            <p class="bold" id="info">To get started, select a point on the map or use your device location.</p>
+            <p>A quick hack by <a href="https://twitter.com/danielthepope">@danielthepope</a>.</p>
+        </footer>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+    <script src="https://cdn.rawgit.com/hayeswise/Leaflet.PointInPolygon/v1.0.0/wise-leaflet-pip.js"></script>
+    <script src="/Polyline.encoded.js"></script>
+    <script src="/app.js"></script>
+</body>
+
+</html>
