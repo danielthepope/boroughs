@@ -15,7 +15,7 @@ h1 {
 .grid {
     display: grid;
     height: 100vh;
-    grid-template-rows: min-content minmax(30%, 1fr) min-content;
+    grid-template-rows: min-content 1fr min-content;
 }
 
 header {
@@ -45,6 +45,7 @@ button {
     background: #E6E9ED;
     border: 2px solid #369C82;
     box-shadow: 0 2px #369C82;
+    min-width: 140px;
 }
 
 button:hover {
