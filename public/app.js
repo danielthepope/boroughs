@@ -89,12 +89,13 @@ function updateInfo(latLong, isTracked) {
     const borough = boroughs.find(b => b.region.contains(latLongObj));
     if (previousBorough !== borough) {
         previousBorough = borough;
-        const prefix = isTracked ? "You're in" : "You've selected";
         document.getElementById('info').innerHTML = '';
         if (borough && borough.name) {
+            const prefix = isTracked ? "You're in" : "You've selected";
             document.getElementById('info').innerText = `${prefix} ${borough.name}.`;
         } else {
-            document.getElementById('info').innerText = `${prefix} outside of London`;
+            const prefix = isTracked ? "You're" : "Your selection is";
+            document.getElementById('info').innerText = `${prefix} outside of London.`;
         }
         setTimeout(() => { mymap.invalidateSize(); mymap.panTo(latLongObj) }, 100);
     }
