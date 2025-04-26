@@ -4,23 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="keywords" content="Greater London, borough, boroughs, location">
     <meta name="description"
-        content="Which London borough am I in? Select a point on the map or use your device location.">
+        content="Which London borough am I in? Search by postcode, select a point on the map or use your device location.">
     <meta property="og:title" content="Which Borough am I in?">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://boroughs.dpope.uk/android-chrome-192x192.png">
     <meta property="og:description" content="Which London borough am I in? Select a point on the map or use your device location.">
     <title>Which Borough am I in?</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
         integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
         crossorigin="" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
+    <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+    <link rel="manifest" href="./site.webmanifest">
 </head>
 
 <body>
@@ -30,12 +30,14 @@
             <h1>Which Borough am I in?</h1>
             <p>
                 <button id="location-button" onclick="watchLocation()">Use device location</button>
+                <input type="search" id="postcode-box" placeholder="Search by postcode">
             </p>
+            <p id="info">To get started, enter a postcode, select a point on the map or use your device location.</p>
         </header>
         <main id="map"></main>
         <footer>
-            <p class="bold" id="info">To get started, select a point on the map or use your device location.</p>
-            <p>A quick hack by <a rel="me" href="https://mastodon.me.uk/@danielthepope">@danielthepope</a>.</p>
+            <p>Boundary and postcode data licensed under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">Open Government Licence v3</a>.</p>
+            <p>An <a href="https://github.com/danielthepope/boroughs">open source project</a> by <a rel="me" href="https://mastodon.me.uk/@danielthepope">Dan Pope</a>.</p>
         </footer>
     </div>
 
@@ -43,8 +45,8 @@
         integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
         crossorigin=""></script>
     <script src="https://cdn.rawgit.com/hayeswise/Leaflet.PointInPolygon/v1.0.0/wise-leaflet-pip.js"></script>
-    <script src="/Polyline.encoded.js"></script>
-    <script src="/app.js"></script>
+    <script src="./Polyline.encoded.js"></script>
+    <script src="./app.js"></script>
 </body>
 
 </html>

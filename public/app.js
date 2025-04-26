@@ -13,7 +13,7 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 
 let boroughs = [];
 
-fetch('/data/london_boroughs_encoded.json')
+fetch('./data/london_boroughs_encoded.json')
     .then(r => r.json())
     .then(data => {
         boroughs = [];
@@ -84,18 +84,23 @@ function drawLocation(latLong, accuracy) {
 
 let previousBorough = null;
 
+function updateInfoText(text) {
+    document.getElementById('info').classList.add('bold');
+    document.getElementById('info').innerText = text;
+}
+
 function updateInfo(latLong, isTracked) {
     const latLongObj = 'lat' in latLong ? latLong : { lat: latLong[0], lng: latLong[1] };
     const borough = boroughs.find(b => b.region.contains(latLongObj));
     if (previousBorough !== borough) {
         previousBorough = borough;
-        document.getElementById('info').innerHTML = '';
+        // document.getElementById('info').innerHTML = '';
         if (borough && borough.name) {
             const prefix = isTracked ? "You're in" : "You've selected";
-            document.getElementById('info').innerText = `${prefix} ${borough.name}.`;
+            updateInfoText(`${prefix} ${borough.name}.`);
         } else {
             const prefix = isTracked ? "You're" : "Your selection is";
-            document.getElementById('info').innerText = `${prefix} outside of London.`;
+            updateInfoText(`${prefix} outside of London.`);
         }
         setTimeout(() => { mymap.invalidateSize(); mymap.panTo(latLongObj) }, 100);
     }
@@ -129,3 +134,37 @@ function onMapClick(e) {
 }
 
 mymap.on('click', onMapClick);
+
+// Postcodes
+function postcodeUpdate(e) {
+    if (e.code === 'Enter') {
+        document.getElementById('postcode-box').blur();
+    }
+
+    const search = e.target.value.replaceAll(' ', '').toUpperCase();
+    if (search.length > 4) {
+        const shard = search.substring(0,2);
+        fetch(`./data/postcodes/${shard}.csv`)
+            .then(r => r.text())
+            .then(s => {
+                const results = s.split('\n').filter(l => l.split(',')[0] == search);
+                if (results.length == 1) {
+                    const latlng = {
+                        lat: results[0].split(',')[1],
+                        lng: results[0].split(',')[2]
+                    }
+                    drawLocation(latlng);
+                    updateInfoText(`${e.target.value.toUpperCase()} is in ${results[0].split(',')[3]}.`);
+                } else {
+                    updateInfoText('Invalid postcode');
+                }
+            })
+            .catch(r => {
+                updateInfoText('Invalid postcode');
+            })
+            
+    }
+}
+
+const postcodeBox = document.getElementById('postcode-box');
+postcodeBox.onkeyup = postcodeUpdate;
