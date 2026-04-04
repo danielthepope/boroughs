@@ -1,4 +1,4 @@
-var mymap = L.map('map').setView([51.5035837, -0.1198196411], 11);
+var map = L.map('map').setView([51.5035837, -0.1198196411], 11);
 
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -9,7 +9,7 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     tileSize: 512,
     zoomOffset: -1,
     accessToken: 'pk.eyJ1IjoiZGFuaWVsdGhlcG9wZSIsImEiOiJja3NtZzY4bnMwZXQxMnFwN2ppamExdWIyIn0.iVnNGWspmUggOEuR3THlYg'
-}).addTo(mymap);
+}).addTo(map);
 
 let boroughs = [];
 
@@ -23,10 +23,11 @@ fetch('./data/london_boroughs_encoded.json')
         const region = L.Polygon.fromEncoded(borough.region, {
             color: '#333',
             fillColor: '#000',
-            fillOpacity: 0
+            fillOpacity: 0,
+            weight: 2
         });
         // region.bindPopup(borough.name);
-        region.addTo(mymap);
+        region.addTo(map);
         boroughs.push({
             name: borough.name,
             region: region
@@ -36,6 +37,12 @@ fetch('./data/london_boroughs_encoded.json')
 let locationCircle = null;
 let locationMarker = null;
 let navigationWatcher = null;
+
+// https://leafletjs.com/reference.html#popup-option
+const popup = L.popup({
+    closeButton: false,
+    closeOnEscapeKey: false,
+});
 
 function trackLocation(cb) {
     if ('geolocation' in navigator && navigationWatcher === null) {
@@ -57,10 +64,10 @@ function trackLocation(cb) {
 
 function drawLocation(latLong, accuracy) {
     if (locationCircle) {
-        locationCircle.removeFrom(mymap);
+        locationCircle.removeFrom(map);
     }
     if (locationMarker) {
-        locationMarker.removeFrom(mymap);
+        locationMarker.removeFrom(map);
     }
     if (accuracy) {
         locationCircle = L.circle(latLong, {
@@ -69,49 +76,42 @@ function drawLocation(latLong, accuracy) {
             fillOpacity: 0.1,
             radius: accuracy
         });
-        locationCircle.addTo(mymap);
+        locationCircle.addTo(map);
         locationMarker = L.circleMarker(latLong, {
             color: '#fff',
             fillColor: '#07f',
             fillOpacity: 1
         });
+        map.panTo(latLong);
+        locationMarker.addTo(map);
     } else {
-        locationMarker = L.marker(latLong);
+        // The popup is enough, nothing else to render here
     }
-    locationMarker.addTo(mymap);
-    mymap.panTo(latLong);
 }
 
-let previousBorough = null;
-
-function updateInfoText(text) {
-    document.getElementById('info').classList.add('bold');
-    document.getElementById('info').innerText = text;
-}
-
-function updateInfo(latLong, isTracked) {
+function getMessage(latLong, isTracked) {
     const latLongObj = 'lat' in latLong ? latLong : { lat: latLong[0], lng: latLong[1] };
     const borough = boroughs.find(b => b.region.contains(latLongObj));
-    if (previousBorough !== borough) {
-        previousBorough = borough;
-        // document.getElementById('info').innerHTML = '';
-        if (borough && borough.name) {
-            const prefix = isTracked ? "You're in" : "You've selected";
-            updateInfoText(`${prefix} ${borough.name}.`);
-        } else {
-            const prefix = isTracked ? "You're" : "Your selection is";
-            updateInfoText(`${prefix} outside of London.`);
-        }
-        setTimeout(() => { mymap.invalidateSize(); mymap.panTo(latLongObj) }, 100);
+    let message = '';
+    if (borough && borough.name) {
+        const prefix = isTracked ? "You're in" : "You've selected";
+        message = `${prefix} ${borough.name}.`;
+    } else {
+        const prefix = isTracked ? "You're" : "Your selection is";
+        message = `${prefix} outside of London.`;
     }
+    return message;
 }
 
 function watchLocation() {
     trackLocation((err, latLong, accuracy) => {
         if (err) console.warn(err);
         else {
+            const message = getMessage(latLong, true);
             drawLocation(latLong, accuracy);
-            updateInfo(latLong, true);
+            popup.setLatLng(latLong)
+                .setContent(message)
+                .openOn(map);
         }
     });
 }
@@ -129,11 +129,14 @@ function stopTrackingLocation() {
 function onMapClick(e) {
     console.log(e.latlng);
     stopTrackingLocation();
+    const message = getMessage(e.latlng, false);
     drawLocation(e.latlng);
-    updateInfo(e.latlng, false);
+    popup.setLatLng(e.latlng)
+        .setContent(message)
+        .openOn(map);
 }
 
-mymap.on('click', onMapClick);
+map.on('click', onMapClick);
 
 // Postcodes
 function postcodeUpdate(e) {
@@ -154,15 +157,17 @@ function postcodeUpdate(e) {
                         lng: results[0].split(',')[2]
                     }
                     drawLocation(latlng);
-                    updateInfoText(`${e.target.value.toUpperCase()} is in ${results[0].split(',')[3]}.`);
+                    popup.setLatLng(latlng)
+                        .setContent(`${e.target.value.toUpperCase()} is in ${results[0].split(',')[3]}.`)
+                        .openOn(map);
+                    map.panTo(latlng);
                 } else {
-                    updateInfoText('Invalid postcode');
+                    // alert('Invalid postcode');
                 }
             })
             .catch(r => {
-                updateInfoText('Invalid postcode');
+                // alert('Invalid postcode');
             })
-            
     }
 }
 
