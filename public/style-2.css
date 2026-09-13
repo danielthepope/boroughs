@@ -65,6 +65,10 @@ input[type=search] {
     margin: 4px;
 }
 
+input[type=search]:invalid {
+    border: 2px solid #d54e32;
+}
+
 a {
     color: #000;
     font-weight: bold;

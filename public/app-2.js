@@ -140,8 +140,9 @@ map.on('click', onMapClick);
 
 // Postcodes
 function postcodeUpdate(e) {
+    const postcodeBox = document.getElementById('postcode-box');
     if (e.code === 'Enter') {
-        document.getElementById('postcode-box').blur();
+        postcodeBox.blur();
     }
 
     const search = e.target.value.replaceAll(' ', '').toUpperCase();
@@ -161,13 +162,16 @@ function postcodeUpdate(e) {
                         .setContent(`${e.target.value.toUpperCase()} is in ${results[0].split(',')[3]}.`)
                         .openOn(map);
                     map.panTo(latlng);
+                    postcodeBox.setCustomValidity('');
                 } else {
-                    // alert('Invalid postcode');
+                    postcodeBox.setCustomValidity('Invalid postcode');
                 }
             })
             .catch(r => {
-                // alert('Invalid postcode');
+                postcodeBox.setCustomValidity('Invalid postcode');
             })
+    } else {
+        postcodeBox.setCustomValidity('');
     }
 }
 
