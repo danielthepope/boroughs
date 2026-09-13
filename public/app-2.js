@@ -146,7 +146,7 @@ function postcodeUpdate(e) {
 
     const search = e.target.value.replaceAll(' ', '').toUpperCase();
     if (search.length > 4) {
-        const shard = search.substring(0,2);
+        const shard = search.substring(0,3);
         fetch(`./data/postcodes/${shard}.csv`)
             .then(r => r.text())
             .then(s => {

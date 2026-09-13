@@ -38,6 +38,6 @@ current_prefix = ''
 for l in lines:
     print(l)
     if l[0:2] != current_prefix:
-        current_prefix = l[0:2]
+        current_prefix = l[0:3]
     with open(os.path.join(output_prefix, f'{current_prefix}.csv'), 'a') as f:
         f.write(f'{l}\n')
