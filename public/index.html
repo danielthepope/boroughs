@@ -30,7 +30,10 @@
             <h1>Which Borough am I in?</h1>
             <p>
                 <button id="location-button" onclick="watchLocation()">Use device location</button>
-                <input type="search" id="postcode-box" placeholder="Search by postcode">
+                <span class="postcode-wrapper">
+                    <input type="search" id="postcode-box" placeholder="Search by postcode">
+                    <button type="button" id="postcode-clear" aria-label="Clear postcode" hidden></button>
+                </span>
             </p>
             <p id="info">To get started, enter a postcode, select a point on the map or use your device location.</p>
         </header>

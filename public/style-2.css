@@ -47,7 +47,8 @@ button {
     background: #E6E9ED;
     border: 2px solid #369C82;
     box-shadow: 0 2px #369C82;
-    min-width: 140px;
+    color: #222;
+    min-width: 170px;
     margin: 4px;
 }
 
@@ -61,12 +62,50 @@ input[type=search] {
     padding: 5px 10px;
     background: #FFF;
     border: 2px solid #369C82;
-    max-width: 140px;
+    max-width: 170px;
     margin: 4px;
 }
 
 input[type=search]:invalid {
     border: 2px solid #d54e32;
+}
+
+.postcode-wrapper {
+    display: inline-block;
+    position: relative;
+}
+
+.postcode-wrapper input[type=search] {
+    padding-right: 30px;
+}
+
+#postcode-clear {
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    right: 9px;
+    min-width: 0;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    transform: translateY(-50%);
+    border: 0;
+    box-shadow: none;
+    border-radius: 50%;
+    background: #fff;
+    color: #9aa0a6;
+    font-size: 16px;
+    line-height: 18px;
+}
+
+#postcode-clear[hidden] {
+    display: none;
+}
+
+#postcode-clear[invalid] {
+    background: #d54e32;
+    color: #fff;
 }
 
 a {

@@ -139,8 +139,31 @@ function onMapClick(e) {
 map.on('click', onMapClick);
 
 // Postcodes
+const postcodeBox = document.getElementById('postcode-box');
+const postcodeClear = document.getElementById('postcode-clear');
+
+function updatePostcodeClearButton() {
+    const hasText = postcodeBox.value.length > 0;
+    postcodeClear.toggleAttribute('hidden', !hasText);
+    if (postcodeBox.validity.valid) {
+        postcodeClear.toggleAttribute('invalid', false);
+        postcodeClear.innerText = '×';
+    } else {
+        postcodeClear.toggleAttribute('invalid', true);
+        postcodeClear.innerText = '!';
+    }
+}
+
+postcodeClear.onclick = () => {
+    postcodeBox.value = '';
+    postcodeBox.setCustomValidity('');
+    updatePostcodeClearButton();
+    postcodeBox.focus();
+};
+
+postcodeBox.addEventListener('input', updatePostcodeClearButton);
+
 function postcodeUpdate(e) {
-    const postcodeBox = document.getElementById('postcode-box');
     if (e.code === 'Enter') {
         postcodeBox.blur();
     }
@@ -163,17 +186,19 @@ function postcodeUpdate(e) {
                         .openOn(map);
                     map.panTo(latlng);
                     postcodeBox.setCustomValidity('');
+                    updatePostcodeClearButton();
                 } else {
                     postcodeBox.setCustomValidity('Invalid postcode');
+                    updatePostcodeClearButton();
                 }
             })
             .catch(r => {
                 postcodeBox.setCustomValidity('Invalid postcode');
+                updatePostcodeClearButton();
             })
     } else {
         postcodeBox.setCustomValidity('');
     }
 }
 
-const postcodeBox = document.getElementById('postcode-box');
 postcodeBox.onkeyup = postcodeUpdate;
